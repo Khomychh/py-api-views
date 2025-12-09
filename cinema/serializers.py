@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from cinema.models import Movie
+from cinema.models import Movie, Genre, Actor, CinemaHall
 
 
 class MovieSerializer(serializers.Serializer):
@@ -21,4 +21,57 @@ class MovieSerializer(serializers.Serializer):
 
         instance.save()
 
+        return instance
+
+
+class GenreSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(max_length=255)
+
+    def create(self, validated_data):
+        return Genre.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get("name", instance.name)
+        instance.save()
+        return instance
+
+
+class ActorSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    first_name = serializers.CharField(max_length=255)
+    last_name = serializers.CharField(max_length=255)
+
+    def create(self, validated_data):
+        return Actor.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.first_name = validated_data.get(
+            "first_name",
+            instance.first_name
+        )
+        instance.last_name = validated_data.get(
+            "last_name",
+            instance.last_name
+        )
+        instance.save()
+        return instance
+
+
+class CinemaHallSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=255)
+    rows = serializers.IntegerField(min_value=1)
+    seats_in_row = serializers.IntegerField(min_value=1)
+
+    def create(self, validation_data):
+        return CinemaHall.objects.create(**validation_data)
+
+    def update(self, instance, validation_data):
+        instance.name = validation_data.get("name", instance.name)
+        instance.rows = validation_data.get("rows", instance.rows)
+        instance.seats_in_row = validation_data.get(
+            "seats_in_row",
+            instance.seats_in_row
+        )
+        instance.save()
         return instance
