@@ -29,6 +29,7 @@ class CinemaHallViewSet(
     queryset = CinemaHall.objects.all()
     serializer_class = CinemaHallSerializer
 
+
 class ActorList(
     generics.GenericAPIView,
     mixins.ListModelMixin,
